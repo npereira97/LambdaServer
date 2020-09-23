@@ -1,25 +1,30 @@
 package com.company;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Client {
 
     public static void main(String[] args){
+
         try {
-            RemoteFunction<Integer,Integer> f = new RemoteFunction<>(8001, InetAddress.getLocalHost());
-            System.out.println("Client");
-            Integer n = f.ask("square",5);
-            System.out.println(n);
-/*
-            for(int i = 0; i <100000; i++){
-                System.out.println(f.ask("lala",i));
-            }*/
+            RemoteFunction<String,String> f = new RemoteFunction<>(8000,InetAddress.getLocalHost());
+            String k = f.ask("hey");
 
 
-        }catch (UnknownHostException e){
 
+            System.out.println(k);
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
+    }
+
+
+    public static<A extends Serializable,B extends Serializable> B test(A val){
+
     }
 
 

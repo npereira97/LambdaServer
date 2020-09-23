@@ -1,5 +1,8 @@
 package com.company;
 
+
+
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -12,10 +15,9 @@ public class Main {
             @Override
             public Integer func(Action.Unit input) {
 
-
-                    for(int i = 0; i < 10; i++){
+                for(int i = 0; i < 10; i++){
                         System.out.println(i);
-                    }
+                }
 
 
 
@@ -31,13 +33,13 @@ public class Main {
             }
         });
 
-
+/*
         Object obj = new Main();
         for (Method m: obj.getClass().getMethods()){
             System.out.println(m);
         }
 
-
+*/
 
 
 

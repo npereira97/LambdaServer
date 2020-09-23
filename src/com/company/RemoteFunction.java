@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Hashtable;
 
 public class RemoteFunction<A extends Serializable,B extends Serializable> {
     private int port;
@@ -18,13 +19,16 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
 
     }
 
+    public B ask(A input){
+        return ask("",input);
+    }
+
     /* Blocking */
     public B ask(String funcName, A input){
 
         try {
 
             Socket socket = new Socket(address,port);
-
 
 
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
@@ -59,11 +63,8 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
 
 
 
-
     public void reply(Function<A,B> func,Object obj){
         try{
-
-
             ServerSocket server = new ServerSocket(port);
             while (true){
                 Socket client = server.accept();
@@ -77,10 +78,10 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
                             ObjectInputStream oin = new ObjectInputStream(client.getInputStream());
                             ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
 
+                            oos.writeObject(obj.getClass());
+
 
                             Pair<String,A> info = (Pair<String, A>) oin.readObject();
-
-
 
 
                             String funcName = info.getKey();
@@ -96,6 +97,7 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
                                     Class temp = new Integer(1).getClass();
                                     rep = (B) (cls.getDeclaredMethod(funcName,temp).invoke(obj,arg));
 
+
                                 }catch (NoSuchMethodException e){
                                     System.out.println("acess");
                                 }catch (IllegalAccessException e){
@@ -107,8 +109,6 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
                             }else{
                                 rep = func.func(arg);
                             }
-
-
 
                             oos.writeObject(rep);
                             client.close();
@@ -130,11 +130,11 @@ public class RemoteFunction<A extends Serializable,B extends Serializable> {
                 act.get_threaded_action()._eval();
 
 
-
             }
         }catch(IOException e){
             System.out.println(e);
         }
 
     }
+
 }
